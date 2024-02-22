@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% block title %}Julio's Task's List{% endblock %}
+
+{% block content %}
+{% include "header.html" %}
+{% from 'bootstrap5/form.html' import render_form %}
+
+<div class="container my-3 pd-3">
+  <div class="row">
+    <div class = "col">
+      {{render_form(form, button_size="lg")}}
+    </div>
+  </div>
+</div>
+
+<div class="container my-3 pd-3">
+      <div class = "list-group">
+        {% for task in tasks %}
+        <a class="list-group-item list-group-item-action list-group-item-primary"> 
+          <div class="row align-items-center">
+            <div class="col display-5">
+              {{task.task_description}}
+            </div>
+            <div class="col text-end">
+              <button class="btn btn-primary" type="button">Done</button>
+              <button class="btn btn-secondary" type="button">Undone</button>
+              <button class="btn btn-danger" type="button">Remove</button>
+            </div>
+          </div>
+        </a>
+        {% endfor %}
+      </div>
+</div>
+
+
+{% include "footer.html" %}
+{% endblock %}

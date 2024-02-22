@@ -1,0 +1,17 @@
+[tool.poetry]
+name = "todolist"
+version = "0.1.0"
+description = "A simple TODO List app in python and flask"
+authors = ["KJcesar <kaitocesar@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+flask = "^3.0.2"
+bootstrap-flask = "^2.3.3"
+flask-wtf = "^1.2.1"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
