@@ -3,7 +3,7 @@
 
 {% block content %}
 {% include "header.html" %}
-{% from 'bootstrap5/form.html' import render_form %}
+{% from 'bootstrap5/form.html' import render_form, render_field %}
 
 <div class="container my-3 pd-3">
   <div class="row">
@@ -13,25 +13,33 @@
   </div>
 </div>
 
+{% if tasks != "No Tasks": %}
 <div class="container my-3 pd-3">
       <div class = "list-group">
-        {% for task in tasks %}
+        {% for task in tasks: %}
         <a class="list-group-item list-group-item-action list-group-item-primary"> 
           <div class="row align-items-center">
             <div class="col display-5">
-              {{task.task_description}}
+              {% if task.completed: %}
+                <s>{{task.title}}</s>
+              {% else: %}
+                {{task.title}} 
+                {% endif %}
             </div>
             <div class="col text-end">
-              <button class="btn btn-primary" type="button">Done</button>
-              <button class="btn btn-secondary" type="button">Undone</button>
-              <button class="btn btn-danger" type="button">Remove</button>
+              <form method="post">
+                {{ buttons.csrf_token() }}
+                {{ render_field(buttons.done, button_style="primary")}}
+                {{ render_field(buttons.undone, button_style="secondary")}}
+                {{ render_field(buttons.delete, button_style="danger")}}
+              </form>
             </div>
           </div>
         </a>
         {% endfor %}
       </div>
 </div>
-
+{% endif %}
 
 {% include "footer.html" %}
 {% endblock %}

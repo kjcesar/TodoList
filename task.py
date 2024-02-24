@@ -1,9 +1,10 @@
 from datetime import datetime
+from models import TaskModel
 
 
 class Task:
-    def __init__(self, task_description, due_date=None):
-        self.task_description = task_description
+    def __init__(self, title, due_date=None):
+        self.title = title
         self.due_date = datetime.strptime(due_date, "%Y-%m-%d") if due_date else None
         self.completed = False
 
@@ -12,6 +13,17 @@ class Task:
 
     def mark_as_imcomplete(self):
         self.completed = False
+
+    def to_model(self):
+        return TaskModel(
+            title=self.title, due_date=self.due_date, completed=self.completed
+        )
+
+    @classmethod
+    def from_model(cls, task_model):
+        task = cls(title=task_model.title)
+        task.completed = task_model.completed
+        return task
 
     def __str__(self):
         status = "Completed" if self.completed else "Imcomplete"
