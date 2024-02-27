@@ -8,7 +8,7 @@
 <div class="container my-3 pd-3">
   <div class="row">
     <div class = "col">
-      {{render_form(form, button_size="lg")}}
+      {{render_form(new_task_form, button_size="lg")}}
     </div>
   </div>
 </div>
@@ -16,24 +16,21 @@
 {% if tasks != "No Tasks": %}
 <div class="container my-3 pd-3">
       <div class = "list-group">
-        {% for task in tasks: %}
+        {% for form in tasks_forms: %}
         <a class="list-group-item list-group-item-action list-group-item-primary"> 
           <div class="row align-items-center">
+            <form method = "post">
+              {{ form.csrf_token() }}
             <div class="col display-5">
-              {% if task.completed: %}
-                <s>{{task.title}}</s>
-              {% else: %}
-                {{task.title}} 
-                {% endif %}
+              {{ render_field(form.done) }}
+
             </div>
             <div class="col text-end">
-              <form method="post">
-                {{ buttons.csrf_token() }}
-                {{ render_field(buttons.done, button_style="primary")}}
-                {{ render_field(buttons.undone, button_style="secondary")}}
-                {{ render_field(buttons.delete, button_style="danger")}}
-              </form>
+              {{ render_field(form.complete, button_size="lg", button_style="primary")}}
+              {{ render_field(form.remove, button_size="lg", button_style="danger") }}
+
             </div>
+            </form>
           </div>
         </a>
         {% endfor %}

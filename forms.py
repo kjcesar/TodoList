@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
-from wtforms import BooleanField, StringField, SubmitField
-from wtforms.validators import InputRequired
+from wtforms import BooleanField, StringField, SubmitField, ValidationError
+from wtforms.validators import DataRequired, InputRequired
 
 
 class TaskForm(FlaskForm):
@@ -9,6 +9,11 @@ class TaskForm(FlaskForm):
 
 
 class DoneForm(FlaskForm):
-    done = SubmitField("Done")
-    undone = SubmitField("Undone")
-    delete = SubmitField("Remove")
+    done = BooleanField(label="DefaultLabel")
+    complete = SubmitField("Complete")
+    remove = SubmitField("Remove")
+
+    def validate_complete(self, field):
+        if self.complete.data:
+            if not field.data:
+                raise ValidationError("You must check the box to complete the tasks")

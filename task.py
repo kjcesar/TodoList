@@ -28,6 +28,4 @@ class Task:
     def __str__(self):
         status = "Completed" if self.completed else "Imcomplete"
         due_date_str = self.due_date.strftime("%Y-%m-%d") if self.due_date else "None"
-        return (
-            f"Task: {self.task_description}\nDue Date: {due_date_str}\nStatus: {status}"
-        )
+        return f"Task: {self.title}\nDue Date: {due_date_str}\nStatus: {status}"
