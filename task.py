@@ -3,8 +3,9 @@ from models import TaskModel
 
 
 class Task:
-    def __init__(self, title, due_date=None):
+    def __init__(self, title, task_id, due_date=None):
         self.title = title
+        self.task_id = task_id
         self.due_date = datetime.strptime(due_date, "%Y-%m-%d") if due_date else None
         self.completed = False
 
@@ -21,7 +22,7 @@ class Task:
 
     @classmethod
     def from_model(cls, task_model):
-        task = cls(title=task_model.title)
+        task = cls(title=task_model.title, task_id=task_model.id)
         task.completed = task_model.completed
         return task
 

@@ -16,18 +16,15 @@
 {% if tasks != "No Tasks": %}
 <div class="container my-3 pd-3">
       <div class = "list-group">
-        {% for form in tasks_forms: %}
+        {% for task in tasks: %}
         <a class="list-group-item list-group-item-action list-group-item-primary"> 
           <div class="row align-items-center">
-            <form method = "post">
-              {{ form.csrf_token() }}
             <div class="col display-5">
-              {{ render_field(form.done) }}
-
+              <p>{{task.title}}</p>
             </div>
             <div class="col text-end">
-              {{ render_field(form.complete, button_size="lg", button_style="primary")}}
-              {{ render_field(form.remove, button_size="lg", button_style="danger") }}
+              <button type="button" class="btn btn-primary">Complete Task </button>
+              <button type="button" class="btn btn-danger">Remove Task </button>
 
             </div>
             </form>

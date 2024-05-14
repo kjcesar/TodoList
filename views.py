@@ -27,7 +27,6 @@ def inject_current_year():
 @app.route("/", methods=["GET", "POST"])
 def home():
     new_task_form = TaskForm()
-    tasks_forms = []
     # all_tasks = get_all_tasks().json if get_all_tasks() != "No Tasks" else None
 
     result = db.session.execute(db.select(TaskModel))
@@ -39,7 +38,7 @@ def home():
         task_from_model = Task.from_model(model)
         all_tasks.append(task_from_model)
 
-    print(all_tasks[0])
+    print(all_tasks[0].task_id)
 
     if new_task_form.validate_on_submit() and new_task_form.task.data != None:
         new_task = Task(new_task_form.task.data)
@@ -55,23 +54,9 @@ def home():
         else:
             incomplete_task.append(task)
 
-    for task in incomplete_task:
-        new_form = DoneForm()
-        new_form.done.label.text = task.title
-        tasks_forms.append(new_form)
-
-    for form in tasks_forms:
-        if form.validate_on_submit():
-            if form.complete.data:
-                print("task completed")
-            elif form.remove.data:  # proccess the form without Checkbox
-                print("task deleted")
-                response = requests.delete(f"http://{requests.host}/remove-task")
-
     return render_template(
         "index.html",
         new_task_form=new_task_form,
-        tasks_forms=tasks_forms,
         tasks=all_tasks,
     )
 
