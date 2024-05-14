@@ -39,7 +39,7 @@ def home():
         task_from_model = Task.from_model(model)
         all_tasks.append(task_from_model)
 
-    print(all_tasks)
+    print(all_tasks[0])
 
     if new_task_form.validate_on_submit() and new_task_form.task.data != None:
         new_task = Task(new_task_form.task.data)
@@ -66,6 +66,7 @@ def home():
                 print("task completed")
             elif form.remove.data:  # proccess the form without Checkbox
                 print("task deleted")
+                response = requests.delete(f"http://{requests.host}/remove-task")
 
     return render_template(
         "index.html",
@@ -84,6 +85,20 @@ def get_all_tasks():
         return jsonify(tasks=[task.to_dict() for task in all_tasks])
     except:
         return "No Tasks"
+
+
+# DELETE
+@app.route("/remove-task/<int:task_id>", methods=["DELETE"])
+def delete_task(task_id):
+    task_to_be_deleted = db.get_or_404(
+        task_model, task_id, description="Task not found"
+    )
+    if task_to_be_deleted:
+        db.session.delete(task_to_be_deleted)
+        db.session.commit()
+        return jsonify(response={"success": "Successfully Deleted"})
+    else:
+        return jsonify(response={"error": "Cafe not found"}), 404
 
 
 def add_task(task_to_be_added):
