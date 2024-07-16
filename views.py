@@ -32,8 +32,8 @@ def home():
     result = db.session.execute(db.select(TaskModel))
     all_tasks_models = result.scalars().all()
     all_tasks = []
-    completed_task = []
-    incomplete_task = []
+    completed_tasks = []
+    incomplete_tasks = []
     for model in all_tasks_models:
         task_from_model = Task.from_model(model)
         all_tasks.append(task_from_model)
@@ -50,16 +50,40 @@ def home():
 
     for task in all_tasks:
         if task.completed:
-            completed_task.append(task)
+            completed_tasks.append(task)
         else:
-            incomplete_task.append(task)
+            incomplete_tasks.append(task)
 
     return render_template(
         "index.html",
         new_task_form=new_task_form,
-        tasks=all_tasks,
+        incomplete_tasks=incomplete_tasks,
+        complete_tasks=completed_tasks
     )
 
+@app.route("/remove_pressed/<int:task_id>", methods=["POST"])
+def remove_task(task_id):
+    print(f"Remove task no. {task_id}")
+    delete_task(task_id)
+    return redirect(url_for("home"))
+
+@app.route("/complete_task/<int:task_id>", methods=["POST"])
+def mark_complete_task(task_id):
+    print(f"Comlete task no. {task_id}")
+    task_to_be_completed = db.get_or_404(TaskModel, task_id, description="Task not found")
+    if task_to_be_completed:
+        task_to_be_completed.completed = True
+        db.session.commit()
+    return redirect(url_for("home"))
+
+@app.route("/incomplete_task/<int:task_id>", methods=["POST"])
+def mark_incomplete_task(task_id):
+    print(f"Mark task no. {task_id} as incomplete")
+    task_to_be_incompleted = db.get_or_404(TaskModel, task_id, description="Task not found")
+    if task_to_be_incompleted:
+        task_to_be_incompleted.completed = False
+        db.session.commit()
+    return redirect(url_for("home"))
 
 ## API
 @app.route("/all", methods=["GET"])
@@ -76,7 +100,7 @@ def get_all_tasks():
 @app.route("/remove-task/<int:task_id>", methods=["DELETE"])
 def delete_task(task_id):
     task_to_be_deleted = db.get_or_404(
-        task_model, task_id, description="Task not found"
+        TaskModel, task_id, description="Task not found"
     )
     if task_to_be_deleted:
         db.session.delete(task_to_be_deleted)
